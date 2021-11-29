@@ -1,5 +1,5 @@
-import { Button, Switch } from '@chakra-ui/react'
-import { Route } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
+import './App.css'
 import ChatPage from './pages/ChatPage'
 import HomePage from './pages/HomePage'
 
