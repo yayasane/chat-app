@@ -31,7 +31,7 @@ const Signup = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <VStack spacing="5px">
+      <VStack spacing="5">
         <FormControl id="name" isRequired>
           <FormLabel>Name</FormLabel>
           <Input

@@ -26,7 +26,7 @@ const Login = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <VStack spacing="5px">
+      <VStack spacing="5">
         <FormControl id="email" isRequired>
           <FormLabel>Email</FormLabel>
           <Input
