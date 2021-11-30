@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import connectDB from './config/db.js'
 import colors from 'colors'
 import usersRoutes from './routes/users.routes.js'
+import chatsRoutes from './routes/chats.routes.js'
 import { errorHandler, notFound } from './middlewares/error.middleware.js'
 
 dotenv.config()
@@ -16,6 +17,7 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/users', usersRoutes)
+app.use('/api/chats', chatsRoutes)
 
 app.use(notFound)
 app.use(errorHandler)
