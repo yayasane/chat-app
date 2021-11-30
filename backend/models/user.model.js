@@ -1,5 +1,6 @@
-import { Schema, model } from 'mongoose'
-const bcrypt = require('bcryptjs')
+import mongoose from 'mongoose'
+const { Schema, model } = mongoose
+import bcrypt from 'bcryptjs'
 
 const userSchema = Schema(
   {
@@ -8,7 +9,6 @@ const userSchema = Schema(
     password: { type: 'String', required: true },
     pic: {
       type: 'String',
-      required: true,
       default:
         'https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg',
     },
@@ -36,4 +36,4 @@ userSchema.pre('save', async function (next) {
 
 const User = model('User', userSchema)
 
-module.exports = User
+export { User }

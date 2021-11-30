@@ -5,9 +5,12 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  useToast,
   VStack,
 } from '@chakra-ui/react'
+import axios from 'axios'
 import React, { useState } from 'react'
+import { useHistory, withRouter } from 'react-router-dom'
 
 const Login = () => {
   const [user, setUser] = useState({
@@ -17,12 +20,65 @@ const Login = () => {
 
   const [show, setShow] = useState(false)
 
+  const [picLoading, setPicLoading] = useState(false)
+
+  const toast = useToast()
+
+  const history = useHistory()
+
   const handleChange = ({ currentTarget }) => {
     const { name, value } = currentTarget
     setUser((u) => ({ ...u, [name]: value }))
   }
 
-  const handleSubmit = () => {}
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setPicLoading(true)
+    if (!user.email || !user.password) {
+      toast({
+        title: 'Please Fill all the Feilds',
+        status: 'warning',
+        duration: 5000,
+        isClosable: true,
+        position: 'bottom',
+      })
+      setPicLoading(false)
+      return
+    }
+
+    // console.log(email, password);
+    try {
+      const config = {
+        headers: {
+          'Content-type': 'application/json',
+        },
+      }
+
+      const { data } = await axios.post('/api/users/login', user, config)
+
+      // console.log(JSON.stringify(data));
+      toast({
+        title: 'Login Successful',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+        position: 'bottom',
+      })
+      localStorage.setItem('userInfo', JSON.stringify(data))
+      setPicLoading(false)
+      history.push('/chats')
+    } catch (error) {
+      toast({
+        title: 'Error Occured!',
+        description: error.response.data.message,
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+        position: 'bottom',
+      })
+      setPicLoading(false)
+    }
+  }
 
   return (
     <form onSubmit={handleSubmit}>
@@ -58,6 +114,7 @@ const Login = () => {
           width="100%"
           style={{ marginTop: 15 }}
           type="submit"
+          isLoading={picLoading}
         >
           Login
         </Button>
