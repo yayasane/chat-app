@@ -1,13 +1,13 @@
-import { Schema, model } from 'mongoose'
-const messageSchema = Schema(
+import mongoose from 'mongoose'
+const messageSchema = mongoose.Schema(
   {
-    sender: { type: Schema.Types.ObjectId, ref: 'User' },
+    sender: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     content: { type: String, trim: true },
-    chat: { type: Schema.Types.ObjectId, ref: 'Chat' },
-    readBy: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    chat: { type: mongoose.Schema.Types.ObjectId, ref: 'Chat' },
+    readBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   },
   { timestamps: true },
 )
 
-const Message = model('Message', messageSchema)
+const Message = mongoose.model('Message', messageSchema)
 export { Message }
