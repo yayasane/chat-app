@@ -29,13 +29,19 @@ const defaultOptions = {
   },
 }
 
-const ENDPOINT = 'http://localhost:5000'
+const ENDPOINT = 'https://wechat-ap.herokuapp.com/'
 var socket, selectedChatCompare
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [messages, setMessages] = useState([])
 
-  const { user, selectedChat, setSelectedChat } = useChatState()
+  const {
+    user,
+    selectedChat,
+    setSelectedChat,
+    notifications,
+    setNotifications,
+  } = useChatState()
 
   const [loading, setLoading] = useState(false)
 
@@ -74,7 +80,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         `/api/messages/${selectedChat._id}`,
         config,
       )
-      console.log(data)
       setMessages(data)
       setLoading(false)
 
@@ -92,7 +97,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   }
 
   const typingHandler = (e) => {
-    console.log('In typing', e.target.value)
     setNewMessage(e.target.value)
     // Typing Indicator Logic
 
@@ -159,6 +163,9 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
     selectedChatCompare = selectedChat
   }, [selectedChat])
+
+  console.log(notifications, '-------------------')
+
   useEffect(() => {
     socket.on('message received', (newMessageReceived) => {
       var chat = newMessageReceived.chat
@@ -166,7 +173,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         !selectedChatCompare ||
         selectedChatCompare._id !== newMessageReceived.chat._id
       ) {
-        //give notification
+        if (!notifications.includes(newMessageReceived)) {
+          setNotifications([newMessageReceived, ...notifications])
+          setFetchAgain(!fetchAgain)
+        }
       } else {
         setMessages([...messages, newMessageReceived])
       }

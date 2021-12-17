@@ -27,6 +27,10 @@ import { useHistory } from 'react-router-dom'
 import axios from 'axios'
 import ChatLoading from '../ChatLoading'
 import UserListItem from '../UserAvatar/UserListItem'
+import { getSender } from '../../config/ChatLogics'
+import { Effect } from 'react-notification-badge'
+import NotificationBadge from 'react-notification-badge/lib/components/NotificationBadge'
+
 const SideDrawer = () => {
   const [search, setSearch] = useState('')
   const [searchResults, setSearchResults] = useState([])
@@ -35,7 +39,14 @@ const SideDrawer = () => {
 
   const history = useHistory()
 
-  const { setSelectedChat, user, chats, setChats } = useChatState()
+  const {
+    setSelectedChat,
+    user,
+    chats,
+    setChats,
+    notifications,
+    setNotifications,
+  } = useChatState()
 
   const toast = useToast()
 
@@ -127,13 +138,34 @@ const SideDrawer = () => {
         </Tooltip>
 
         <Text fontSize="2xl" fontFamily="Work sans">
-          Talk-A-Tive
+          We-Chat
         </Text>
         <div>
           <Menu>
             <MenuButton>
+              <NotificationBadge
+                count={notifications.length}
+                effect={Effect.SCALE}
+              />
               <BellIcon fontSize="2xl" m={1} />
             </MenuButton>
+
+            <MenuList pl={2}>
+              {!notifications.length && 'No New Messages'}
+              {notifications.map((notif) => (
+                <MenuItem
+                  key={notif._id}
+                  onClick={() => {
+                    setSelectedChat(notif.chat)
+                    setNotifications((ns) => ns.filter((n) => n !== notif))
+                  }}
+                >
+                  {notif.chat.isGroupChat
+                    ? `New Message in ${notif.chat.chatName}`
+                    : `New Message from ${getSender(user, notif.chat.users)}`}
+                </MenuItem>
+              ))}
+            </MenuList>
           </Menu>
           <Menu>
             <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>

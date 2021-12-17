@@ -7,6 +7,7 @@ import chatsRoutes from './routes/chats.routes.js'
 import messagesRoutes from './routes/messages.routes.js'
 import { errorHandler, notFound } from './middlewares/error.middleware.js'
 import { Server } from 'socket.io'
+import path from 'path'
 
 dotenv.config()
 connectDB()
@@ -14,18 +15,31 @@ const app = express()
 
 app.use(express.json())
 
-app.get('/', (req, res) => {
-  console.log('API is Running Successfully')
-})
-
 app.use('/api/users', usersRoutes)
 app.use('/api/chats', chatsRoutes)
 app.use('/api/messages', messagesRoutes)
 
+/*<!-- ========== Start Deployement ========== -->*/
+
+const __dirname1 = path.resolve()
+console.log(process.env.NODE_ENV)
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname1, '/frontend/build')))
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname1, 'frontend', 'build', 'index.html'))
+  })
+} else {
+  app.get('/', (req, res) => {
+    res.send('API is Running Successfully')
+  })
+}
+
+/*<!-- ========== End Deployement ========== -->*/
+
 app.use(notFound)
 app.use(errorHandler)
 
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT || 8800
 const server = app.listen(PORT, (res, err) => {
   if (!err) console.log(`Server started at port ${PORT}`.yellow.bold)
 })
