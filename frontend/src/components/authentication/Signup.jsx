@@ -11,6 +11,7 @@ import {
 import axios from 'axios'
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
+import { useChatState } from '../../contexts/chat/ChatProvider'
 
 const Signup = () => {
   const [user, setUser] = useState({
@@ -24,6 +25,8 @@ const Signup = () => {
   const [PicLoading, setPicLoading] = useState(false)
 
   const [show, setShow] = useState(false)
+
+  const { setUser: setUserChatState } = useChatState()
 
   const toast = useToast()
 
@@ -83,7 +86,7 @@ const Signup = () => {
     setPicLoading(true)
     if (!user.name || !user.email || !user.password || !user.confirmPassword) {
       toast({
-        title: 'Please Fill all the Feilds',
+        title: 'Veullez Remplir tous les Champs',
         status: 'warning',
         duration: 5000,
         isClosable: true,
@@ -94,7 +97,7 @@ const Signup = () => {
     }
     if (user.password !== user.confirmPassword) {
       toast({
-        title: 'Passwords Do Not Match',
+        title: 'Les mots de passe ne concorde pas',
         status: 'warning',
         duration: 5000,
         isClosable: true,
@@ -112,13 +115,14 @@ const Signup = () => {
       const { data } = await axios.post('/api/users', user, config)
       console.log(data)
       toast({
-        title: 'Registration Successful',
+        title: 'Inscription réussi',
         status: 'success',
         duration: 5000,
         isClosable: true,
         position: 'bottom',
       })
-      localStorage.setItem('userInfo', JSON.stringify(data))
+      window.localStorage.setItem('userInfo', JSON.stringify(data))
+      setUserChatState(data)
       setPicLoading(false)
       history.push('/chats')
     } catch (error) {
@@ -138,10 +142,10 @@ const Signup = () => {
     <form onSubmit={handleSubmit}>
       <VStack spacing="5">
         <FormControl id="name" isRequired>
-          <FormLabel>Name</FormLabel>
+          <FormLabel>Nom</FormLabel>
           <Input
             name="name"
-            placeholder="Enter Your Name"
+            placeholder="Votre Nom"
             onChange={handleChange}
             value={user.name}
           />
@@ -150,17 +154,17 @@ const Signup = () => {
           <FormLabel>Email</FormLabel>
           <Input
             name="email"
-            placeholder="Enter Your Email"
+            placeholder="Votre email"
             onChange={handleChange}
             value={user.email}
           />
         </FormControl>
         <FormControl id="password" isRequired>
-          <FormLabel>Password</FormLabel>
+          <FormLabel>Mot de passe</FormLabel>
           <InputGroup>
             <Input
               name="password"
-              placeholder="Enter Your Password"
+              placeholder="Votre mot de passe"
               onChange={handleChange}
               value={user.password}
               type={show ? 'text' : 'password'}
@@ -173,11 +177,11 @@ const Signup = () => {
           </InputGroup>
         </FormControl>
         <FormControl id="confirmPassword" isRequired>
-          <FormLabel>Confirm Password</FormLabel>
+          <FormLabel>Confirmez votre mot de passe</FormLabel>
           <InputGroup>
             <Input
               name="confirmPassword"
-              placeholder="Confirm Your Password"
+              placeholder="Confirmer votre Mot de passe"
               onChange={handleChange}
               value={user.confirmPassword}
               type={show ? 'text' : 'password'}
@@ -190,7 +194,7 @@ const Signup = () => {
           </InputGroup>
         </FormControl>
         <FormControl id="pic" isRequired>
-          <FormLabel>Upload your Picture</FormLabel>
+          <FormLabel>Ajouter votre photo</FormLabel>
           <Input
             name="pic"
             onChange={(e) => postDetails(e.target.files[0])}
@@ -206,7 +210,7 @@ const Signup = () => {
           type="submit"
           isLoading={PicLoading}
         >
-          Sign Up
+          S'inscrire
         </Button>
       </VStack>
     </form>

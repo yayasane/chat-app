@@ -138,12 +138,12 @@ const GroupChatModal = ({ children }) => {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader
-            fontSize="35px"
+            fontSize="25px"
             fontFamily="Work sans"
             d="flex"
             justifyContent="center"
           >
-            Create Group chat
+            Créer Discussion Groupe
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody
@@ -154,14 +154,14 @@ const GroupChatModal = ({ children }) => {
           >
             <FormControl>
               <Input
-                placeholder="Chat Name"
+                placeholder="Nom Discussion"
                 mb={3}
                 onChange={(e) => setGroupChatName(e.target.value)}
               />
             </FormControl>
             <FormControl>
               <Input
-                placeholder="Add users eg: John, Piyush, Jane"
+                placeholder="Ajouter utilisateur ex: Yaya"
                 mb={1}
                 onChange={(e) => handleSearch(e.target.value)}
               />

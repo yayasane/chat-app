@@ -12,11 +12,13 @@ export const ChatProvider = ({ children }) => {
   const history = useHistory()
 
   useEffect(() => {
-    const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+    const userInfo = JSON.parse(window.localStorage.getItem('userInfo'))
     setUser(userInfo)
     if (!userInfo) {
       history.push('/')
     }
+    console.log(history.location.pathname)
+    console.log(history.location)
   }, [history])
   return (
     <ChatContext.Provider

@@ -11,6 +11,7 @@ import {
 import axios from 'axios'
 import React, { useState } from 'react'
 import { useHistory, withRouter } from 'react-router-dom'
+import { useChatState } from '../../contexts/chat/ChatProvider'
 
 const Login = () => {
   const [user, setUser] = useState({
@@ -20,11 +21,13 @@ const Login = () => {
 
   const [show, setShow] = useState(false)
 
-  const [picLoading, setPicLoading] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const toast = useToast()
 
   const history = useHistory()
+
+  const { setUser: setUserChatState } = useChatState()
 
   const handleChange = ({ currentTarget }) => {
     const { name, value } = currentTarget
@@ -33,7 +36,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    setPicLoading(true)
+    setLoading(true)
     if (!user.email || !user.password) {
       toast({
         title: 'Please Fill all the Feilds',
@@ -42,7 +45,7 @@ const Login = () => {
         isClosable: true,
         position: 'bottom',
       })
-      setPicLoading(false)
+      setLoading(false)
       return
     }
 
@@ -64,8 +67,9 @@ const Login = () => {
         isClosable: true,
         position: 'bottom',
       })
-      localStorage.setItem('userInfo', JSON.stringify(data))
-      // setPicLoading(false)
+      window.localStorage.setItem('userInfo', JSON.stringify(data))
+      setUserChatState(data)
+      setLoading(false)
       history.push('/chats')
     } catch (error) {
       toast({
@@ -76,7 +80,7 @@ const Login = () => {
         isClosable: true,
         position: 'bottom',
       })
-      setPicLoading(false)
+      setLoading(false)
     }
   }
 
@@ -87,17 +91,17 @@ const Login = () => {
           <FormLabel>Email</FormLabel>
           <Input
             name="email"
-            placeholder="Enter Your Email"
+            placeholder="Votre email"
             onChange={handleChange}
             value={user.email}
           />
         </FormControl>
         <FormControl id="password" isRequired>
-          <FormLabel>Password</FormLabel>
+          <FormLabel>Mot de passe</FormLabel>
           <InputGroup>
             <Input
               name="password"
-              placeholder="Enter Your Password"
+              placeholder="Votre mot de passe"
               onChange={handleChange}
               value={user.password}
               type={show ? 'text' : 'password'}
@@ -114,11 +118,11 @@ const Login = () => {
           width="100%"
           style={{ marginTop: 15 }}
           type="submit"
-          isLoading={picLoading}
+          isLoading={loading}
         >
-          Login
+          Connexion
         </Button>
-        <Button
+        {/* <Button
           variant="solid"
           colorScheme="red"
           width="100%"
@@ -131,7 +135,7 @@ const Login = () => {
           }
         >
           Get Guest User's Credentials
-        </Button>
+        </Button> */}
       </VStack>
     </form>
   )
